@@ -41,9 +41,14 @@ app.post('/', async function (req, res, next) {
     const name = req.body.name;
     const color = req.body.color;
 
-    // only save colors from our list
-    if (!name || !COLORS.includes(color)) {
-      return res.redirect('/');
+    // Check 1: did they type a name?
+    if (name === '') {
+      return res.redirect('/');  // no name, so send them back to the form
+    }
+
+    // Check 2: did they pick one of our rainbow colors?
+    if (COLORS.includes(color) === false) {
+      return res.redirect('/');  // not a rainbow color, so send them back to the form
     }
 
     await prisma.person.create({

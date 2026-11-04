@@ -1,0 +1,69 @@
+body {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  font: 16px Helvetica, Arial, sans-serif;
+}
+
+nav a {
+  margin-right: 16px;
+  color: #0066cc;
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+form label {
+  display: block;
+  margin-top: 12px;
+}
+
+form input,
+form select {
+  padding: 6px;
+  font-size: 16px;
+}
+
+button {
+  display: block;
+  margin-top: 12px;
+  padding: 6px 14px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+td form {
+  margin: 0;
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+button.delete {
+  margin-top: 0;
+  color: #b00020;
+}
+
+footer {
+  margin-top: 40px;
+  color: #777;
+  font-size: 14px;
+}

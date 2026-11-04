@@ -1,0 +1,19 @@
+// prisma/schema.prisma
+// Each model becomes a table in your database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // The connection string lives in prisma.config.js
+}
+
+// One row for each person who submits the form
+model Person {
+  id        Int      @id @default(autoincrement())
+  name      String
+  color     String
+  createdAt DateTime @default(now())
+}

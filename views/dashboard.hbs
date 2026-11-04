@@ -1,0 +1,115 @@
+<h1>Dashboard</h1>
+<p>{{total}} people have picked a favorite color.</p>
+
+<!-- 1. BAR CHART (Chart.js) -->
+<section>
+  <h2>Votes by color</h2>
+  <canvas id="barChart"></canvas>
+</section>
+
+<!-- 2. RAINBOW (p5.js) -->
+<section>
+  <h2>Rainbow</h2>
+  <p>Each band gets thicker as more people pick that color.</p>
+  <div id="rainbow"></div>
+</section>
+
+<!-- 3. PEOPLE + DELETE -->
+<section>
+  <h2>People</h2>
+  {{#if people.length}}
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Color</th>
+        <th></th>
+      </tr>
+      {{#each people}}
+        <tr>
+          <td>{{this.name}}</td>
+          <td><span class="swatch" style="background: {{this.color}}"></span> {{this.color}}</td>
+          <td>
+            <form action="/people/{{this.id}}/delete" method="post">
+              <button type="submit" class="delete">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  {{else}}
+    <p>No one yet. <a href="/">Add your color</a>.</p>
+  {{/if}}
+</section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.min.js"></script>
+
+<script>
+  // Data from the server: [{ color: 'red', count: 2 }, { color: 'orange', count: 0 }, ...]
+  let colorData = {{{countsJSON}}};
+  console.log(colorData);
+
+  // Split the data into two arrays for Chart.js
+  let colors = [];
+  let counts = [];
+  for (let i = 0; i < colorData.length; i++) {
+    colors.push(colorData[i].color);
+    counts.push(colorData[i].count);
+  }
+
+  // ----- BAR CHART -----
+  new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: colors,
+      datasets: [{
+        label: '# of people',
+        data: counts,
+        backgroundColor: colors
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+      }
+    }
+  });
+
+  // ----- P5 RAINBOW -----
+  function setup() {
+    let canvas = createCanvas(600, 320);
+    canvas.parent('rainbow');
+    noLoop(); // the data doesn't change, so draw only once
+  }
+
+  function draw() {
+    background(235, 245, 255);
+    noFill();
+    strokeCap(SQUARE);
+
+    // the biggest count gets the thickest band
+    let maxCount = max(counts);
+
+    let radius = 290; // outside edge of the rainbow
+
+    for (let band of colorData) {
+      // 4px if no votes, up to 34px for the most popular color
+      let thickness = 4;
+      if (maxCount > 0) {
+        thickness = 4 + (band.count / maxCount) * 30;
+      }
+
+      stroke(band.color);
+      strokeWeight(thickness);
+
+      // the stroke is centered on the arc, so move in by half the thickness
+      let diameter = (radius - thickness / 2) * 2;
+      arc(width / 2, height, diameter, diameter, PI, TWO_PI);
+
+      // the next band starts inside this one
+      radius = radius - thickness;
+    }
+  }
+</script>

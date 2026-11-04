@@ -1,4 +1,4 @@
-# expresssupaprisma - Favorite Color
+# FF-Express-Supabase Example - Favorite Color
 
 A small Express app that saves people's favorite colors to a **Supabase** Postgres database using **Prisma**, then shows the results on a dashboard:
 
